@@ -107,12 +107,43 @@ const board = (function(){
         console.log(tiles[0], tiles[1], tiles[2]);
         console.log(tiles[3], tiles[4], tiles[5]);
         console.log(tiles[6], tiles[7], tiles[8]);
+
+
     }
 
     return {getTile, getTiles, resetBoard, displayTiles, markTile};
 
 })();
 
+
+
+
+
+const display = (function(){
+
+    const render = () => {
+        const nodeList = board.getTiles().map((item, index) => {
+            
+            const tile = document.createElement("p");
+            tile.classList.add("tile");
+            tile.textContent = item;
+            tile.dataset.index = index;
+            return tile;
+
+        })
+        
+
+        const interface = document.querySelector(".interface");
+        const existingTiles = document.querySelectorAll(".interface > p.tile");
+        existingTiles.forEach((item) => { item.remove() });
+        
+        nodeList.forEach((item) => { interface.appendChild(item) })
+        
+    }
+
+    return {render};
+
+})();
 
 
 
@@ -134,3 +165,4 @@ function createPlayer(name, playerId) {
 const player1 = createPlayer("Marty", 1);
 const player2 = createPlayer("Clark", 2);
 game.start();
+display.render();
