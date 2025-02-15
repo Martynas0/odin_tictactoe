@@ -1,41 +1,71 @@
 const game = (function(){
 
     let controller = 1;
+    
+    let player1;
+    let player2;
+    
+    const registerPlayers = () => {
+        const form = document.querySelector("form");
+        
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            player1 = createPlayer(e.target[0].value, 1);
+            player2 = createPlayer(e.target[1].value, 2);
+            form.style.display = "none";
+            start();
+        })
 
-    const start = () => {
-        console.log("Welcome to a brand new game ! Player 1 is starting...");
-        controller = 1;
-        board.resetBoard();
-        board.displayTiles();
     }
 
-    const tileChosen = (index, playerId) => {
+    const start = () => {
+        
+        const interfaceContainer = document.querySelector(".interface-container");
+        interfaceContainer.style.display = "flex";
+        const interface = document.querySelector(".interface");
+        interface.addEventListener("click", tileChosen);
 
+
+        display.message(player1.getName() + " is starting...");
+        controller = 1;
+        board.resetBoard();
+        display.render();
+
+    }
+
+    const tileChosen = (e) => {
+
+        const index = e.target.dataset.index;
+        console.log(index);
+        console.log(player1.getName())
+        
         if (controller === 0) {
-
-            console.log("Game is over.");
-            console.log("Please restart the game to play again.");
-
-        }
-        else if (controller !== playerId) {
-
-            console.log("It is not your turn to choose !");
-
+            display.message("Game is over.");
         }
         else if (board.getTile(index) === "_") {
 
-            board.markTile(index, playerId);
-            board.displayTiles();
-            controller = playerId === 1? 2 : 1;
-            performChecks(playerId);
+            board.markTile(index, controller);
+            display.render();    
+            performChecks(controller);
+            console.log(controller);
 
         }
         else {
-
-            console.log("Tile is already marked !!!");
-
+            display.message("Tile is already marked !");
         }  
 
+    }
+
+    const getController = () => {
+        return controller;
+    }
+
+    const getPlayer1 = () => {
+        return player1;
+    }
+
+    const getPlayer2 = () => {
+        return player2;
     }
 
     // ----- private methods
@@ -55,21 +85,32 @@ const game = (function(){
             gt(0) === m && gt(4) === m && gt(8) === m ||  // Diagonal win
             gt(2) === m && gt(4) === m && gt(6) === m ) {  
             
-                console.log(`Player ${playerId} has won the Game !#$@!`);
+                if (controller === 1) {
+                    display.message(player1.getName() + " has won the Game !#$@!");
+                }
+                else if (controller === 2) {
+                    display.message(player2.getName() + " has won the Game !#$@!");
+                }
                 controller = 0;
+                
                 // Further code for winning here <<<<<
 
         } 
         else if (!board.getTiles().includes("_")) {   // Check for draw
 
-            console.log("It's a DRAW...");
             controller = 0;
+            display.message("It's a DRAW...");
 
+        }
+        else {
+            controller = controller === 1? 2 : 1;
+            display.message();
         }
     }
 
+    
 
-    return {tileChosen, start};
+    return {registerPlayers, getController, getPlayer1, getPlayer2};
 
 })();
 
@@ -102,16 +143,7 @@ const board = (function(){
         }
     }
 
-    const displayTiles = () => {
-        console.log("  ");
-        console.log(tiles[0], tiles[1], tiles[2]);
-        console.log(tiles[3], tiles[4], tiles[5]);
-        console.log(tiles[6], tiles[7], tiles[8]);
-
-
-    }
-
-    return {getTile, getTiles, resetBoard, displayTiles, markTile};
+    return {getTile, getTiles, resetBoard, markTile};
 
 })();
 
@@ -120,6 +152,20 @@ const board = (function(){
 
 
 const display = (function(){
+
+    const message = (msg) => {
+        const heading = document.querySelector("#heading");
+
+        if (msg || game.getController() === 0) {
+            heading.textContent = msg;
+        }
+        else if (game.getController() === 1) {
+            heading.textContent = game.getPlayer1().getName() + " is choosing...";
+        }
+        else if (game.getController() === 2) {
+            heading.textContent = game.getPlayer2().getName() + " is choosing...";
+        }
+    }
 
     const render = () => {
         const nodeList = board.getTiles().map((item, index) => {
@@ -141,7 +187,7 @@ const display = (function(){
         
     }
 
-    return {render};
+    return {render, message};
 
 })();
 
@@ -150,19 +196,15 @@ const display = (function(){
 
 function createPlayer(name, playerId) {
     
+    const myName = name
+
     const getName = () => {
-        return name;
+        return myName;
     }
 
-    const chooseTile = (index) => {
-        game.tileChosen(index, playerId);
-    }
-
-    return {getName, chooseTile};
+    return {getName};
 
 }
 
-const player1 = createPlayer("Marty", 1);
-const player2 = createPlayer("Clark", 2);
-game.start();
-display.render();
+game.registerPlayers();
+
