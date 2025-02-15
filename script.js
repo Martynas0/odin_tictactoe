@@ -4,6 +4,18 @@ const game = (function(){
     
     let player1;
     let player2;
+
+    const restart = () => {
+        const restartDisp = document.querySelector(".restart");
+        const restartBtn = document.querySelector(".restart > button");
+        restartDisp.style.display = "flex";
+        
+        restartBtn.addEventListener("click", () => {
+            restartDisp.style.display = "none";
+            start();
+        })
+
+    }
     
     const begin = () => {
         const form = document.querySelector("form");
@@ -92,6 +104,7 @@ const game = (function(){
                     display.message(player2.getName() + " has won the Game !#$@!");
                 }
                 controller = 0;
+                restart();
                 
                 // Further code for winning here <<<<<
 
@@ -100,6 +113,7 @@ const game = (function(){
 
             controller = 0;
             display.message("It's a DRAW...");
+            restart();
 
         }
         else {
