@@ -113,8 +113,8 @@ form > button:hover {
     align-self: start;
 
     display: grid;
-    grid-template-columns: repeat(3, clamp(150px, 10vw, 300px));
-    grid-template-rows: repeat(3, clamp(150px, 10vw, 300px));
+    grid-template-columns: repeat(3, clamp(100px, 10vw, 300px));
+    grid-template-rows: repeat(3, clamp(100px, 10vw, 300px));
 
 }
 
