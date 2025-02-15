@@ -5,7 +5,7 @@ const game = (function(){
     let player1;
     let player2;
     
-    const registerPlayers = () => {
+    const begin = () => {
         const form = document.querySelector("form");
         
         form.addEventListener("submit", (e) => {
@@ -110,7 +110,7 @@ const game = (function(){
 
     
 
-    return {registerPlayers, getController, getPlayer1, getPlayer2};
+    return {begin, getController, getPlayer1, getPlayer2};
 
 })();
 
@@ -206,5 +206,5 @@ function createPlayer(name, playerId) {
 
 }
 
-game.registerPlayers();
+game.begin();
 
