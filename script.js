@@ -42,7 +42,7 @@ const game = (function(){
         if (controller === 0) {
             display.message("Game is over.");
         }
-        else if (board.getTile(index) === "_") {
+        else if (board.getTile(index) === " ") {
 
             board.markTile(index, controller);
             display.render();    
@@ -96,7 +96,7 @@ const game = (function(){
                 // Further code for winning here <<<<<
 
         } 
-        else if (!board.getTiles().includes("_")) {   // Check for draw
+        else if (!board.getTiles().includes(" ")) {   // Check for draw
 
             controller = 0;
             display.message("It's a DRAW...");
@@ -139,7 +139,7 @@ const board = (function(){
             tiles.pop();
         }
         while(tiles.length < 9) {
-            tiles.push("_");
+            tiles.push(" ");
         }
     }
 
